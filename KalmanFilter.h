@@ -1,27 +1,28 @@
 
-
 #ifndef KALMANFILTER_H
 #define KALMANFILTER_H
 
 class KalmanFilter {
-    private:
-    double Q;      // Process variance
-    double R;      // Measurement variance
-    double x_hat;  // Current best estimate
-    double P;      // Current uncertainty (confidence)
-
+private:
+    double Q;      // Process noise covariance
+    double R;      // Measurement noise covariance
+    double x_hat;  // State estimate
+    double P;      // Estimate covariance
 
 public:
-    // Constructor
-    // Q = how much we think the real value can change (process noise)
-    // R = how noisy our observed data is (measurement noise)
-    // initial_estimate = our first guess of the real value
-    KalmanFilter(double process_variance, double measurement_variance, double initial_estimate);
+    // Q = process noise covariance (how much true value drifts per tick)
+    // R = measurement noise covariance (how noisy observations are)
+    // initial_estimate = first guess of the latent state
+    KalmanFilter(double process_noise, double measurement_noise, double initial_estimate);
 
-    // Update function
-    // Called each time we get a new measurement.
-    // Returns the updated (smoothed) estimate.
+    // Predict step: propagate state and covariance forward
+    void predict();
+
+    // Update step: incorporate new measurement, return filtered estimate
     double update(double measurement);
+
+    double getState() const;
+    double getCovariance() const;
 };
 
 #endif // KALMANFILTER_H

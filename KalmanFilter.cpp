@@ -1,31 +1,29 @@
-using namespace std;
-
 #include "KalmanFilter.h"
 
-// Constructo
-KalmanFilter:: KalmanFilter(double process_variance, double measurement_variance, double initial_estimate)
-    : Q(process_variance), R(measurement_variance), x_hat(initial_estimate), P(1.0) {}
+KalmanFilter::KalmanFilter(double process_noise, double measurement_noise, double initial_estimate)
+    : Q(process_noise), R(measurement_noise), x_hat(initial_estimate), P(1.0) {}
 
+void KalmanFilter::predict() {
+    // State transition: random walk model (x_hat unchanged)
+    // Covariance grows by process noise each tick
+    P += Q;
+}
 
 double KalmanFilter::update(double measurement) {
-    // Step 1: PREDICTION
-    // Assume the real value hasn't changed much
-    double x_hat_prior = x_hat;
-    double P_prior = P + Q; // uncertainty increases a bit over time
+    // Predict step
+    predict();
 
+    // Kalman gain: balances trust between model and observation
+    double K = P / (P + R);
 
+    // State update: weighted combination of prior and measurement
+    x_hat = x_hat + K * (measurement - x_hat);
 
-    // Step 2: UPDATE (CORRECTION)
-    // Calculate Kalman Gain: how much we trust new data vs our old estimate
-    //formula k:
-    double K = P_prior / (P_prior + R);
+    // Covariance update: certainty improves after observation
+    P = (1.0 - K) * P;
 
-    // Update the estimated value
-    x_hat = x_hat_prior + K * (measurement - x_hat_prior);
-
-    // Update our uncertainty (we become more confident)
-    P = (1 - K) * P_prior;
-
-    // Return the filtered (smoothed) estimate
     return x_hat;
 }
+
+double KalmanFilter::getState() const { return x_hat; }
+double KalmanFilter::getCovariance() const { return P; }

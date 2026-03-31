@@ -3,11 +3,11 @@
 ## Overview
 A C++ implementation of a Kalman filter for real-time market price signal extraction, benchmarked against SMA and EMA baselines on real equity data.
 
-Financial markets are full of noisy data — each price tick isn't always meaningful. The Kalman filter models the market price as a **latent state variable** with Gaussian process and observation noise, running recursive predict-update steps to extract a cleaner signal from raw prices.
+Financial markets are full of noisy data, each price tick isn't always meaningful. The Kalman filter models the market price as a **latent state variable** with Gaussian process and observation noise, running recursive predict-update steps to extract a cleaner signal from raw prices.
 
 Unlike simple moving averages, the Kalman filter **adapts its gain** based on the estimated noise structure of the data, achieving a superior trade-off between smoothness and tracking accuracy.
 
-## Benchmark Results — AAPL Daily Close (506 trading days)
+## Benchmark Results. AAPL Daily Close (506 trading days)
 
 | Method   | Noise Reduction | MAE ($) | Max Deviation ($) | Efficiency |
 |----------|----------------:|--------:|-------------------:|-----------:|
